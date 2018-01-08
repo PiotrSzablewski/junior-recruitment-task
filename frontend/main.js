@@ -3,43 +3,44 @@ window.onload = function () {
     let rootURL = 'https://todo-simple-api.herokuapp.com/';
     let hasMore = true;
     let postToDoURL = rootURL + 'todos';
+
     //deklaracja funkcji fetchToDos zajmującej sie pobieraniem todosów z API
     function fetchToDos( page ) {
-        if(!hasMore){
+        if( !hasMore ) {
             return
         }
         let list = document.getElementById( 'todo' );
         let loader = document.createElement( 'li' );
         loader.innerHTML = 'Loading more todos.....';
-        list.appendChild(loader);
+        list.appendChild( loader );
 
-            let getToDosURL = rootURL + `todos?page=${page}&page_size=20`;
-            fetch( getToDosURL ).then( response => { return response.json();} )
-                .then( response => {
-                    list.removeChild(loader);
-                    //sprawdzam czy jest więcej do pobrania
-                    if( response.data.length < 20 ) {
-                        hasMore = false;
+        let getToDosURL = rootURL + `todos?page=${page}&page_size=20`;
+        fetch( getToDosURL ).then( response => { return response.json();} )
+            .then( response => {
+                list.removeChild( loader );
+                //sprawdzam czy jest więcej do pobrania
+                if( response.data.length < 20 ) {
+                    hasMore = false;
+                }
+                response.data.map( todo => {
+
+                        return addItemToDo( todo );
                     }
-                    response.data.map( todo => {
-
-                            return addItemToDo( todo );
-                        }
-                    )
-                } );
+                )
+            } );
 
     }
+
     //wywołanie funkcji aby na wejście pobrać pierwsze todosy
     fetchToDos( page );
+
     // deklaracja funkcji postToDo zajmującej się dodawaniem nowego todo do api
     function postToDo( value ) {
-        console.log( value );
         const data = {
             "title": value,
             "description": "new todo",
             "isComplete": false,
         };
-        console.log( data );
         return fetch( postToDoURL, {
             method: 'POST',
             headers: {
@@ -48,13 +49,13 @@ window.onload = function () {
             body: JSON.stringify( data ),
         } ).then( response => response.json() );
     }
+
     //deklaracja funkcji updateToDo która zmienie status na zrobione lub nie w oparciu o parametr bool
     function updateToDo( id, bool ) {
         const data = {
-            "description": "udating todon",
+            "description": "udating todo",
             "isComplete": bool
         };
-        console.log( data );
         return fetch( `${postToDoURL}` + '/' + `${id}`, {
             method: 'PUT',
             headers: {
@@ -64,6 +65,7 @@ window.onload = function () {
 
         } ).then( response => response.json() );
     }
+
     //funkcja usówa todo w api
     function deleteToDo( id ) {
 
@@ -74,6 +76,7 @@ window.onload = function () {
             }
         } ).then( response => response.json() );
     }
+
     // dodaje eventListnera na click dla dodawanie nowego todosa
     document.getElementById( 'plus' ).addEventListener( 'click', function () {
         let value = document.getElementById( 'item' ).value;
@@ -82,11 +85,10 @@ window.onload = function () {
             document.getElementById( 'item' ).value = '';
         }
     } );
+
     //addItemToDo zajmuje się generowaniem html na podstawie obiektu który retodo
     function addItemToDo( todo ) {
         let bool = todo.isComplete;
-        console.log( "from bool", bool );
-        console.log( "from adder", todo );
         let list = document.getElementById( 'todo' );
         let item = document.createElement( 'li' );
         item.setAttribute( 'id', todo.id );
@@ -117,6 +119,7 @@ window.onload = function () {
 
 
     }
+
     // dodaje eventListnera na click dla zmiany statusu todusa z nie  zrobionego na zrobiony lub odwrotnie oraz gdy warunek jest spełniony event listner odpala fuckcję deleteToDo która usówa todosa
     document.getElementById( "todo" ).addEventListener( 'click', function ( event ) {
 
@@ -140,10 +143,10 @@ window.onload = function () {
             fetchToDos( page );
         }
     } );
+
     //deklaracja funkcji checkingItem która po wywołaniu odpowiada za obsługę zmiany statusu todosa
     function checkingItem( id ) {
         let todo = document.getElementById( id );
-        console.log( todo );
         let check = todo.getElementsByTagName( 'input' )[0];
         let trashCan = todo.getElementsByTagName( 'button' )[0];
         let text = todo.querySelector( '.content' );
