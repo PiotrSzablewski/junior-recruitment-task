@@ -5,10 +5,18 @@ window.onload = function () {
     let postToDoURL = rootURL + 'todos';
     //deklaracja funkcji fetchToDos zajmującej sie pobieraniem todosów z API
     function fetchToDos( page ) {
-        if( hasMore ) {
+        if(!hasMore){
+            return
+        }
+        let list = document.getElementById( 'todo' );
+        let loader = document.createElement( 'li' );
+        loader.innerHTML = 'Loading more todos.....';
+        list.appendChild(loader);
+
             let getToDosURL = rootURL + `todos?page=${page}&page_size=20`;
             fetch( getToDosURL ).then( response => { return response.json();} )
                 .then( response => {
+                    list.removeChild(loader);
                     //sprawdzam czy jest więcej do pobrania
                     if( response.data.length < 20 ) {
                         hasMore = false;
@@ -19,7 +27,7 @@ window.onload = function () {
                         }
                     )
                 } );
-        }
+
     }
     //wywołanie funkcji aby na wejście pobrać pierwsze todosy
     fetchToDos( page );
