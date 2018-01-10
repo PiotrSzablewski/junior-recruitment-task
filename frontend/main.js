@@ -66,7 +66,7 @@ window.onload = function () {
         } ).then( response => response.json() );
     }
 
-    //funkcja usówa todo w api
+    //funkcja usuwa todo w api
     function deleteToDo( id ) {
 
         return fetch( `${postToDoURL}` + '/' + `${id}`, {
@@ -120,7 +120,7 @@ window.onload = function () {
 
     }
 
-    // dodaje eventListnera na click dla zmiany statusu todusa z nie  zrobionego na zrobiony lub odwrotnie oraz gdy warunek jest spełniony event listner odpala fuckcję deleteToDo która usówa todosa
+    // dodaje eventListnera na click dla zmiany statusu todusa z nie  zrobionego na zrobiony lub odwrotnie oraz gdy warunek jest spełniony event listner odpala fuckcję deleteToDo która usuwa todosa
     document.getElementById( "todo" ).addEventListener( 'click', function ( event ) {
 
         let li = event.target.closest( 'LI' );
